@@ -1,0 +1,94 @@
+/* =====================
+   STORE HEADER
+===================== */
+.store-header {
+  margin-bottom: 40px;
+}
+
+.store-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.store-header p {
+  color: #64748b;
+  margin-top: 8px;
+}
+
+/* =====================
+   GRID DE PRODUCTOS
+===================== */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+/* =====================
+   CARD PRODUCTO
+===================== */
+.product-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* =====================
+   INFO PRODUCTO
+===================== */
+.product-info h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.product-description {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* =====================
+   FOOTER PRODUCTO
+===================== */
+.product-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* =====================
+   BOTÓN
+===================== */
+.btn-primary {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #020617;
+}
+

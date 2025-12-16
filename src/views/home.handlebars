@@ -1,0 +1,30 @@
+<header class="store-header">
+  <h1>Tienda Virtual</h1>
+  <p>Productos disponibles</p>
+</header>
+
+<section class="products-grid">
+  {{#each products}}
+    <article class="product-card">
+      <div class="product-info">
+        <h3>{{this.title}}</h3>
+        <p class="product-description">
+          {{this.description}}
+        </p>
+      </div>
+
+      <div class="product-footer">
+        <span class="product-price">
+          ${{this.price}}
+        </span>
+
+        <button class="btn-primary">
+          Agregar al carrito
+        </button>
+      </div>
+    </article>
+  {{/each}}
+</section>
+
+
+
