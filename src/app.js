@@ -5,6 +5,9 @@ import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
 import usersRouter from "./routes/users.router.js";
+import connectDB from './config/db.js';
+
+connectDB();
 
 const app = express();
 

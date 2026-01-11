@@ -1,23 +1,46 @@
-import { Router } from "express";
-import ProductManager from "../managers/ProductManager.js";
+import { Router } from 'express';
+import ProductManagerMongo from '../dao/ProductManagerMongo.js';
 
 const router = Router();
-const pm = new ProductManager("./data/products.json");
+const productManager = new ProductManagerMongo();
 
-router.get("/", async (req, res) => {
-  res.json(await pm.getProducts());
-});
+router.get('/', async (req, res) => {
+  try {
+    const {
+      limit = 10,
+      page = 1,
+      sort,
+      query
+    } = req.query;
 
-router.post("/", async (req, res) => {
-  const product = await pm.addProduct(req.body);
-  req.io.emit("updateProducts", await pm.getProducts());
-  res.json(product);
-});
+    const result = await productManager.getProducts({
+      limit,
+      page,
+      sort,
+      query
+    });
 
-router.delete("/:pid", async (req, res) => {
-  await pm.deleteProduct(req.params.pid);
-  req.io.emit("updateProducts", await pm.getProducts());
-  res.json({ status: "deleted" });
+    res.json({
+      status: 'success',
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage
+        ? `/api/products?page=${result.prevPage}`
+        : null,
+      nextLink: result.hasNextPage
+        ? `/api/products?page=${result.nextPage}`
+        : null
+    });
+
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
 });
 
 export default router;
+
