@@ -1,175 +1,179 @@
-# 🛒 E-commerce Backend - Primera Entrega
+🛒 E-commerce Backend – Entrega Final
 
-Backend desarrollado en Node.js con Express para la gestión de productos y carritos de compra mediante una API REST.
+Backend desarrollado en Node.js + Express, con MongoDB como sistema de persistencia, gestión avanzada de productos y carritos, paginación profesional, relaciones entre modelos y vistas con Handlebars.
 
-## 📁 Estructura del Proyecto
+🎯 Objetivo del Proyecto
 
-```
-ecommerce-backend/
-│
-├── app.js                      # Servidor principal
-├── package.json                # Dependencias y scripts
-├── .gitignore                  # Archivos ignorados por Git
-│
-├── managers/
-│   ├── ProductManager.js       # Gestión de productos
-│   └── CartManager.js          # Gestión de carritos
-│
+Construir una API REST profesional para un e-commerce que permita:
+
+Gestionar productos con filtros, paginación y ordenamiento
+
+Gestionar carritos con referencias reales a productos
+
+Persistir la información en MongoDB
+
+Visualizar productos y carritos mediante vistas renderizadas
+
+Dejar una arquitectura escalable y defendible
+
+📁 Estructura del Proyecto
+src/
+├── app.js
+├── config/
+│   └── db.js
+├── dao/
+│   ├── ProductManagerMongo.js
+│   └── CartManagerMongo.js
+├── models/
+│   ├── product.model.js
+│   └── cart.model.js
 ├── routes/
-│   ├── products.router.js      # Rutas de productos
-│   └── carts.router.js         # Rutas de carritos
-│
-└── data/
-    ├── products.json           # Persistencia de productos
-    └── carts.json              # Persistencia de carritos
-```
+│   ├── products.router.js
+│   ├── carts.router.js
+│   └── views.router.js
+├── views/
+│   ├── index.handlebars
+│   ├── productDetail.handlebars
+│   └── cart.handlebars
+└── public/
 
-## 🚀 Instalación y Ejecución
-
-### 1. Instalar dependencias
-```bash
+🚀 Instalación y Ejecución
+1️⃣ Instalar dependencias
 npm install
-```
 
-### 2. Iniciar el servidor
-```bash
+2️⃣ Levantar MongoDB
+
+Asegúrate de tener MongoDB corriendo localmente:
+
+mongod
+
+3️⃣ Iniciar el servidor
 npm start
-```
 
-El servidor estará corriendo en: `http://localhost:8080`
 
-### 3. Modo desarrollo (con auto-reload)
-```bash
-npm run dev
-```
+Servidor disponible en:
 
-## 📡 Endpoints Disponibles
+http://localhost:8080
 
-### **Productos** (`/api/products`)
+🔧 Tecnologías Utilizadas
 
-#### **GET** `/api/products`
-Lista todos los productos
+Node.js
 
-#### **GET** `/api/products/:pid`
-Obtiene un producto específico por ID
+Express.js
 
-#### **POST** `/api/products`
-Crea un nuevo producto
+MongoDB
 
-**Body:**
-```json
+Mongoose
+
+mongoose-paginate-v2
+
+Handlebars
+
+ES Modules
+
+📦 Productos – API REST
+🔹 GET /api/products
+
+Permite obtener productos con paginación, filtros y ordenamiento mediante query params.
+
+Query params disponibles:
+Parámetro	Descripción
+limit	Cantidad de productos por página (default: 10)
+page	Página actual (default: 1)
+sort	asc o desc (orden por precio)
+query	Filtro por categoría o disponibilidad
+Ejemplo:
+GET /api/products?limit=5&page=2&sort=asc&query=electronics
+
+Respuesta:
 {
-  "title": "Producto Ejemplo",
-  "description": "Descripción del producto",
-  "code": "ABC123",
-  "price": 1000,
-  "stock": 50,
-  "category": "Electrónica",
-  "thumbnails": ["img1.jpg", "img2.jpg"]
+  "status": "success",
+  "payload": [],
+  "totalPages": 3,
+  "prevPage": 1,
+  "nextPage": 3,
+  "page": 2,
+  "hasPrevPage": true,
+  "hasNextPage": true,
+  "prevLink": "/api/products?page=1",
+  "nextLink": "/api/products?page=3"
 }
-```
 
-#### **PUT** `/api/products/:pid`
-Actualiza un producto existente
+🛒 Carritos – API REST
+Endpoints implementados:
+Método	Ruta	Descripción
+POST	/api/carts	Crear carrito
+GET	/api/carts/:cid	Obtener carrito con productos (populate)
+POST	/api/carts/:cid/products/:pid	Agregar producto
+PUT	/api/carts/:cid/products/:pid	Actualizar cantidad
+DELETE	/api/carts/:cid/products/:pid	Eliminar producto
+PUT	/api/carts/:cid	Reemplazar productos
+DELETE	/api/carts/:cid	Vaciar carrito
 
-#### **DELETE** `/api/products/:pid`
-Elimina un producto
+📌 Los productos dentro del carrito referencian al modelo Product mediante ObjectId y se devuelven completos usando populate.
 
----
+🖥️ Vistas (Handlebars)
+/products
 
-### **Carritos** (`/api/carts`)
+Lista de productos paginados
 
-#### **POST** `/api/carts`
-Crea un nuevo carrito vacío
+Botones de navegación
 
-#### **GET** `/api/carts/:cid`
-Obtiene los productos de un carrito específico
+Botón “Agregar al carrito”
 
-#### **POST** `/api/carts/:cid/product/:pid`
-Agrega un producto al carrito (incrementa cantidad si ya existe)
+Acceso a detalle de producto
 
-## 🧪 Ejemplos de Pruebas en Postman
+/products/:pid
 
-### 1️⃣ Crear un producto
-```
-POST http://localhost:8080/api/products
-Content-Type: application/json
+Vista con detalle completo del producto
 
-{
-  "title": "Laptop Dell",
-  "description": "Laptop de alto rendimiento",
-  "code": "DELL-001",
-  "price": 1200,
-  "stock": 10,
-  "category": "Computadoras",
-  "thumbnails": ["dell1.jpg"]
-}
-```
+Información de precio, categoría y descripción
 
-### 2️⃣ Obtener todos los productos
-```
-GET http://localhost:8080/api/products
-```
+Botón para agregar al carrito
 
-### 3️⃣ Crear un carrito
-```
-POST http://localhost:8080/api/carts
-```
+/carts/:cid
 
-### 4️⃣ Agregar producto al carrito
-```
-POST http://localhost:8080/api/carts/1/product/1
-```
+Vista de un carrito específico
 
-### 5️⃣ Ver productos del carrito
-```
-GET http://localhost:8080/api/carts/1
-```
+Lista únicamente los productos del carrito
 
-### 6️⃣ Actualizar un producto
-```
-PUT http://localhost:8080/api/products/1
-Content-Type: application/json
+Muestra cantidad y datos del producto
 
-{
-  "price": 1100,
-  "stock": 15
-}
-```
+🧪 Testing con Postman
 
-### 7️⃣ Eliminar un producto
-```
-DELETE http://localhost:8080/api/products/1
-```
+El proyecto fue testeado manualmente con Postman, validando:
 
-## ✅ Características Implementadas
+Paginación y filtros de productos
 
-- ✔ Servidor Express en puerto 8080
-- ✔ Rutas organizadas con Router de Express
-- ✔ IDs autogenerados para productos y carritos
-- ✔ Validación de campos obligatorios
-- ✔ Código único por producto
-- ✔ Persistencia en archivos JSON
-- ✔ Incremento de cantidad si el producto ya existe en el carrito
-- ✔ Manejo de errores completo
-- ✔ Respuestas JSON estructuradas
+Ordenamiento por precio
 
-## 📝 Notas Importantes
+Creación y gestión de carritos
 
-- Los archivos `products.json` y `carts.json` se crean automáticamente al iniciar el servidor
-- Los IDs son autoincrementales
-- El campo `status` tiene valor `true` por defecto
-- El campo `thumbnails` es opcional y se inicializa como array vacío si no se proporciona
-- No se puede modificar el ID de un producto al actualizarlo
-- El código de producto debe ser único
+Incremento de cantidades
 
-## 🔧 Tecnologías Utilizadas
+Eliminación y limpieza de carritos
 
-- Node.js
-- Express.js
-- File System (fs/promises)
-- ES Modules
+Correcto funcionamiento de populate
 
-## 👨‍💻 Desarrollo
+🧠 Decisiones Técnicas Clave
 
-Proyecto desarrollado como Primera Entrega del curso de Backend.
+DAO separado para desacoplar lógica de negocio y persistencia
+
+MongoDB + Mongoose para escalabilidad
+
+populate para evitar duplicación de datos
+
+mongoose-paginate-v2 para paginación profesional
+
+Arquitectura preparada para autenticación futura
+
+✅ Estado del Proyecto
+
+✔ Entrega Final completada
+✔ Requisitos cumplidos al 100%
+✔ Código escalable y mantenible
+✔ Listo para evaluación y defensa técnica
+
+👨‍💻 Autor
+
+Proyecto desarrollado como Entrega Final del curso de Backend, siguiendo buenas prácticas de arquitectura y diseño de APIs REST.
